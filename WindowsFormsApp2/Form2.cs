@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp2
@@ -15,12 +10,57 @@ namespace WindowsFormsApp2
         Random rand = new Random();
         string currentTurn;
         Color currentColor;
-         
+
 
         Color colorX;
         Color colorO;
         string nameX;
         string nameO;
+
+
+        void CheckForWin()
+        {
+            if (Socket1.Text == "X" && Socket2.Text == "X" && Socket3.Text == "X" ||
+                Socket4.Text == "X" && Socket5.Text == "X" && Socket6.Text == "X" ||
+                Socket7.Text == "X" && Socket8.Text == "X" && Socket9.Text == "X" ||
+                Socket1.Text == "X" && Socket4.Text == "X" && Socket7.Text == "X" ||
+                Socket2.Text == "X" && Socket5.Text == "X" && Socket8.Text == "X" ||
+                Socket3.Text == "X" && Socket6.Text == "X" && Socket9.Text == "X" ||
+                Socket1.Text == "X" && Socket5.Text == "X" && Socket9.Text == "X" ||
+                Socket7.Text == "X" && Socket5.Text == "X" && Socket3.Text == "X")
+            {
+                MessageBox.Show($"Koniec Gry. Wygrał {nameX}");
+                clearArena();
+            }
+            else if (Socket1.Text == "O" && Socket2.Text == "O" && Socket3.Text == "O" ||
+                Socket4.Text == "O" && Socket5.Text == "O" && Socket6.Text == "O" ||
+                Socket7.Text == "O" && Socket8.Text == "O" && Socket9.Text == "O" ||
+                Socket1.Text == "O" && Socket4.Text == "O" && Socket7.Text == "O" ||
+                Socket2.Text == "O" && Socket5.Text == "O" && Socket8.Text == "O" ||
+                Socket3.Text == "O" && Socket6.Text == "O" && Socket9.Text == "O" ||
+                Socket1.Text == "O" && Socket5.Text == "O" && Socket9.Text == "O" ||
+                Socket7.Text == "O" && Socket5.Text == "O" && Socket3.Text == "O")
+            {
+                MessageBox.Show($"Koniec Gry. Wygrał {nameO}");
+                clearArena();
+            }
+        }
+
+
+        void clearArena()
+        {
+            foreach (var element in tableLayoutPanel1.Controls)
+            {
+                if (element is Button)
+                {
+                    Button btn = (Button)element;
+
+                    btn.Text = "";
+                    btn.ForeColor = Color.Black;
+                }
+            }
+        }
+
 
         public Form2(Color colorX, Color colorO, string nameX, string nameO)
         {
@@ -45,54 +85,43 @@ namespace WindowsFormsApp2
                 currentColor = colorO;
                 PlayerName.Text = nameO;
                 PlayerColor.BackColor = colorO;
-            }
 
+
+
+            }
         }
 
-        private void Socket_Click(object sender, EventArgs e)
-        {
-            Button btn = sender as Button;
-
-            if (!string.IsNullOrEmpty(btn.Text)) return;
-
-            btn.Text = currentTurn;
-
-            switch(currentTurn)
+            private void Socket_Click(object sender, EventArgs e)
             {
-                case "X":
-                    btn.Text = currentTurn;
-                    btn.ForeColor = currentColor;
-                    currentTurn = "O";
-                    currentColor = colorO;
-                    PlayerName.Text = nameO;
-                    PlayerColor.BackColor = colorO;
-                    break;
-                case "O":
-                    btn.Text = currentTurn;
-                    btn.ForeColor = currentColor;
-                    currentTurn = "X";
-                    currentColor = colorX;
-                    PlayerName.Text = nameX;
-                    PlayerColor.BackColor = colorX;
-                    break;
-            }
+                Button btn = sender as Button;
 
-            // Check if win
+                if (!string.IsNullOrEmpty(btn.Text)) return;
 
-            
+                btn.Text = currentTurn;
 
+                switch (currentTurn)
+                {
+                    case "X":
+                        btn.Text = currentTurn;
+                        btn.ForeColor = currentColor;
+                        currentTurn = "O";
+                        currentColor = colorO;
+                        PlayerName.Text = nameO;
+                        PlayerColor.BackColor = colorO;
+                        break;
+                    case "O":
+                        btn.Text = currentTurn;
+                        btn.ForeColor = currentColor;
+                        currentTurn = "X";
+                        currentColor = colorX;
+                        PlayerName.Text = nameX;
+                        PlayerColor.BackColor = colorX;
+                        break;
+                }
 
-                for (int i = 0; i < tableLayoutPanel1.Controls.Count; i++)
-            {
-                
-            }
+                // Check if win
+                CheckForWin();
 
-                for(int i = 0; i < tableLayoutPanel1.ColumnCount; i++)
-            {
-                int controls = tableLayoutPanel1.Controls.Count;
-
-                if()
             }
         }
     }
-}
